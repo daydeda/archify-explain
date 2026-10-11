@@ -422,5 +422,7 @@
   "viewer.common.copyLink": "Скопировать ссылку",
   "viewer.common.clear": "Очистить",
   "viewer.common.close": "Закрыть",
-  "viewer.passport.explain.how": "Как это работает"
+  "viewer.passport.explain.how": "Как это работает",
+  "viewer.language.switch": "Сменить язык",
+  "viewer.language.switchTo": "Переключить на {language}"
 }

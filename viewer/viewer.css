@@ -4741,3 +4741,12 @@ html[data-share-playback="true"] svg[data-animation="trace"] [data-graph-role="a
   .source-evidence-beacon,
   svg [data-node-id], svg [data-edge-from], svg [data-detail], svg [data-detail-anchor], svg [data-legend-hit], svg { transition: none !important; }
 }
+.language-glyph {
+  font-size: 0.75em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  opacity: 0.8;
+}
+#btn-language[hidden] {
+  display: none;
+}

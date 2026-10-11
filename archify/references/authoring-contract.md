@@ -108,6 +108,15 @@ Renderer-owned default legend labels follow `meta.locale`; author a
 `meta.legend.entries.*.label` override only when the diagram needs different
 domain wording, and keep that authored override in the primary language.
 
+### Second language switch
+
+When the user wants one diagram readable in two languages (for example English and Thai), keep every authored field in the primary language and add `meta.alternate_language` (all five modes):
+
+- `locale` (language tag, e.g. `th`) and `label` (the switch text, e.g. `ไทย`, up to 24 characters); optional `base_label` for the primary language (defaults to its short code, e.g. `EN`).
+- `strings`: a map from each authored text, exactly as written, to its translation. Cover the title, labels, sublabels, connection labels, boundary and card text, and any `details` / `explanation` text. Text without an entry stays as authored.
+
+The Viewer shows a language button in the toolbar and swaps matching text in place; its own controls stay in `meta.locale`. Image exports use whichever language is showing; the delivered HTML file keeps the primary language in its SVG. Keep exact product, code, and API names untranslated, and check that translated labels still fit their boxes.
+
 ## Visual preset default
 
 Omit `meta.visual_preset` by default. The renderer then opens the diagram in

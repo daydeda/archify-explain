@@ -422,5 +422,7 @@
   "viewer.common.copyLink": "リンクをコピー",
   "viewer.common.clear": "クリア",
   "viewer.common.close": "閉じる",
-  "viewer.passport.explain.how": "仕組み"
+  "viewer.passport.explain.how": "仕組み",
+  "viewer.language.switch": "言語を切り替え",
+  "viewer.language.switchTo": "{language}に切り替え"
 }

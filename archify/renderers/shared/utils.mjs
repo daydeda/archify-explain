@@ -127,6 +127,7 @@ const SUBTITLE_SLOT_RE = /^([ \t]*)<p class="subtitle">\[Subtitle description\]<
 const SOURCE_EVIDENCE_PLACEHOLDER = '    <!-- ARCHIFY:SOURCE_EVIDENCE_DATA -->';
 const I18N_PLACEHOLDER = '    <!-- ARCHIFY:I18N_DATA -->';
 const EXPLAIN_PLACEHOLDER = '    <!-- ARCHIFY:EXPLAIN_DATA -->';
+const ALTERNATE_LANGUAGE_PLACEHOLDER = '    <!-- ARCHIFY:ALTERNATE_LANGUAGE_DATA -->';
 
 function serializeScriptJson(value) {
   return JSON.stringify(value)
@@ -142,6 +143,17 @@ const TEMPLATE_PLACEHOLDERS = [
   I18N_PLACEHOLDER,
 ];
 
+// The base language is the diagram's own locale; the reader can switch to
+// the authored alternate. Labels default to the short language code.
+function alternateLanguagePayload(baseLocale, alternate) {
+  const shortLabel = (locale) => String(locale).split('-')[0].toUpperCase();
+  return {
+    base: { locale: baseLocale, label: alternate.base_label || shortLabel(baseLocale) },
+    alternate: { locale: alternate.locale, label: alternate.label || shortLabel(alternate.locale) },
+    strings: alternate.strings,
+  };
+}
+
 export function applyTemplate(template, {
   title,
   subtitle,
@@ -151,6 +163,7 @@ export function applyTemplate(template, {
   visualPreset = 'classic',
   sourceEvidence = null,
   explain = null,
+  alternateLanguage = null,
 }) {
   if (!SVG_SLOT_RE.test(template)) {
     throw new Error('applyTemplate: template missing ARCHIFY:SVG_SLOT sentinel');
@@ -177,6 +190,9 @@ export function applyTemplate(template, {
   if (explain && !template.includes(EXPLAIN_PLACEHOLDER)) {
     throw new Error(`applyTemplate: node details require placeholder ${JSON.stringify(EXPLAIN_PLACEHOLDER)}`);
   }
+  if (alternateLanguage && !template.includes(ALTERNATE_LANGUAGE_PLACEHOLDER)) {
+    throw new Error(`applyTemplate: meta.alternate_language requires placeholder ${JSON.stringify(ALTERNATE_LANGUAGE_PLACEHOLDER)}`);
+  }
   // Function replacers: a literal `$&`, `$'`, `$\`` or `$$` in titles, labels,
   // or rendered SVG must not be interpreted as a replacement pattern.
   const sourceEvidenceJson = serializeScriptJson(sourceEvidence);
@@ -196,6 +212,9 @@ export function applyTemplate(template, {
       : '')
     .replace(SVG_SLOT_RE, () => svg)
     .replace(CARDS_SLOT_RE, () => cards)
+    .replace(ALTERNATE_LANGUAGE_PLACEHOLDER, () => alternateLanguage
+      ? `    <script id="archify-alternate-language-data" type="application/json">${serializeScriptJson(alternateLanguagePayload(resolvedLocale, alternateLanguage))}</script>`
+      : '')
     .replace(EXPLAIN_PLACEHOLDER, () => explain
       ? `    <script id="archify-explain-data" type="application/json">${serializeScriptJson(explain)}</script>`
       : '')

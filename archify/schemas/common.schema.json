@@ -18,6 +18,24 @@
       "additionalProperties": { "type": "string", "minLength": 1, "maxLength": 400 },
       "maxProperties": 600
     },
+    "alternateLanguage": {
+      "description": "Optional second language for the reader. Each key in strings is an authored text exactly as written (title, label, sublabel, connection label, card text, details, explanation); its value is the translation. The Viewer adds a switch between the two.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locale", "label", "strings"],
+      "properties": {
+        "locale": { "$ref": "#/$defs/locale" },
+        "label": { "type": "string", "minLength": 1, "maxLength": 24 },
+        "base_label": { "type": "string", "minLength": 1, "maxLength": 24 },
+        "strings": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 1500,
+          "propertyNames": { "minLength": 1, "maxLength": 1200 },
+          "additionalProperties": { "type": "string", "minLength": 1, "maxLength": 1200 }
+        }
+      }
+    },
     "nodeDetails": {
       "description": "Optional longer explanation shown when the reader clicks the node: what it does and how it works. It never changes layout.",
       "type": "object",
