@@ -421,5 +421,6 @@
   "viewer.common.copyFailed": "コピーに失敗しました",
   "viewer.common.copyLink": "リンクをコピー",
   "viewer.common.clear": "クリア",
-  "viewer.common.close": "閉じる"
+  "viewer.common.close": "閉じる",
+  "viewer.passport.explain.how": "仕組み"
 }

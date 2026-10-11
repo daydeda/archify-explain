@@ -436,5 +436,6 @@
   "viewer.rail.controls": "측면 패널",
   "viewer.rail.collapse": "측면 패널 접기",
   "viewer.rail.bottom": "패널을 다이어그램 아래로 이동",
-  "viewer.rail.right": "패널을 다이어그램 옆으로 이동"
+  "viewer.rail.right": "패널을 다이어그램 옆으로 이동",
+  "viewer.passport.explain.how": "작동 방식"
 }

@@ -1806,6 +1806,41 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       white-space: nowrap;
     }
     .semantic-passport-detail[hidden] { display: none; }
+    .semantic-passport-explain {
+      max-height: min(14rem, 34vh);
+      margin-top: 0.45rem;
+      padding: 0.45rem 0.55rem;
+      overflow-y: auto;
+      border-left: 2px solid var(--frontend-stroke);
+      border-radius: 0 0.45rem 0.45rem 0;
+      background: color-mix(in srgb, var(--panel) 72%, transparent);
+      color: var(--text);
+      font-size: 0.625rem;
+      line-height: 1.5;
+      overscroll-behavior: contain;
+    }
+    .semantic-passport-explain[hidden],
+    .semantic-passport-explain [hidden] { display: none; }
+    .semantic-passport-explain-summary {
+      margin: 0;
+      white-space: normal;
+    }
+    .semantic-passport-explain-heading {
+      display: block;
+      margin-top: 0.35rem;
+      color: var(--text-faint);
+      font-size: 0.5rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .semantic-passport-explain-summary[hidden] + .semantic-passport-explain-heading { margin-top: 0; }
+    .semantic-passport-explain-steps {
+      margin: 0.2rem 0 0;
+      padding-left: 1.05rem;
+      white-space: normal;
+    }
+    .semantic-passport-explain-steps li + li { margin-top: 0.18rem; }
     .semantic-passport-meta {
       display: flex;
       flex-wrap: wrap;
@@ -2055,6 +2090,14 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       font-size: 0.6875rem;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+    .relationship-lens-why {
+      grid-column: 2;
+      margin-top: 0.15rem;
+      color: var(--text-muted);
+      font-size: 0.5625rem;
+      line-height: 1.45;
+      white-space: normal;
     }
     .relationship-lens-row small {
       overflow: hidden;
@@ -4984,6 +5027,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     </div>
 
     <!-- ARCHIFY:SOURCE_EVIDENCE_DATA -->
+    <!-- ARCHIFY:EXPLAIN_DATA -->
     <!-- ARCHIFY:I18N_DATA -->
     <!-- Main Diagram -->
     <div class="diagram-container" data-detail-level="read"
@@ -5199,6 +5243,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             <span class="relationship-lens-eyebrow">{{i18n:viewer.passport.eyebrow}}</span>
             <strong class="relationship-lens-title" id="relationship-lens-title"><span id="focus-label"></span></strong>
             <span class="semantic-passport-detail" id="focus-detail" hidden></span>
+            <div class="semantic-passport-explain" id="focus-explain" hidden>
+              <p class="semantic-passport-explain-summary" id="focus-explain-summary" hidden></p>
+              <span class="semantic-passport-explain-heading" id="focus-explain-heading" hidden>{{i18n:viewer.passport.explain.how}}</span>
+              <ol class="semantic-passport-explain-steps" id="focus-explain-steps" hidden></ol>
+            </div>
             <div class="semantic-passport-meta" id="focus-passport-meta" aria-label="{{i18n:viewer.passport.metadata}}">
               <span id="focus-kind" data-passport="kind"></span>
               <span id="focus-context" data-passport="context" hidden></span>
@@ -7477,6 +7526,20 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       var chip = document.getElementById('focus-chip');
       var label = document.getElementById('focus-label');
       var detail = document.getElementById('focus-detail');
+      var explainBox = document.getElementById('focus-explain');
+      var explainSummary = document.getElementById('focus-explain-summary');
+      var explainHeading = document.getElementById('focus-explain-heading');
+      var explainSteps = document.getElementById('focus-explain-steps');
+      // Optional authored details/explanations, emitted outside the SVG so
+      // canonical exports stay unchanged. Missing or malformed data is ignored.
+      var explainData = (function () {
+        var element = document.getElementById('archify-explain-data');
+        if (!element) return null;
+        try {
+          var parsed = JSON.parse(element.textContent || 'null');
+          return parsed && typeof parsed === 'object' ? parsed : null;
+        } catch (_) { return null; }
+      })();
       var kind = document.getElementById('focus-kind');
       var context = document.getElementById('focus-context');
       var tag = document.getElementById('focus-tag');
@@ -7841,8 +7904,49 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         });
         evidence.hidden = false;
       }
+      function explainText(value) {
+        var text = value == null ? '' : String(value);
+        return Archify.alternateLanguage ? Archify.alternateLanguage.text(text) : text;
+      }
+      function nodeExplanation(id) {
+        var entry = explainData && explainData.nodes && explainData.nodes[id];
+        return entry && typeof entry === 'object' ? entry : null;
+      }
+      function edgeExplanation(key) {
+        var value = explainData && explainData.edges && explainData.edges[key];
+        return typeof value === 'string' && value.trim() ? value : '';
+      }
+      function clearExplain() {
+        explainSummary.textContent = '';
+        explainSummary.hidden = true;
+        explainHeading.hidden = true;
+        explainSteps.textContent = '';
+        explainSteps.hidden = true;
+        explainBox.hidden = true;
+      }
+      function renderExplain(id) {
+        clearExplain();
+        var entry = nodeExplanation(id);
+        if (!entry) return;
+        if (typeof entry.summary === 'string' && entry.summary.trim()) {
+          explainSummary.textContent = explainText(entry.summary);
+          explainSummary.hidden = false;
+        }
+        var steps = Array.isArray(entry.steps)
+          ? entry.steps.filter(function (step) { return typeof step === 'string' && step.trim(); })
+          : [];
+        steps.forEach(function (step) {
+          var item = document.createElement('li');
+          item.textContent = explainText(step);
+          explainSteps.appendChild(item);
+        });
+        explainHeading.hidden = !steps.length;
+        explainSteps.hidden = !steps.length;
+        explainBox.hidden = explainSummary.hidden && !steps.length;
+      }
       function renderPassport(id, node) {
         setPassportValue(detail, node.getAttribute('data-node-sublabel'));
+        renderExplain(id);
         setPassportValue(kind, viewerKindLabel(node.getAttribute('data-node-kind') || 'node'));
         setPassportValue(context, node.getAttribute('data-node-context'));
         setPassportValue(tag, node.getAttribute('data-node-tag'));
@@ -8475,6 +8579,13 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             button.appendChild(direction);
             button.appendChild(target);
             button.appendChild(relation);
+            var why = edgeExplanation(relationship.key);
+            if (why) {
+              var reason = document.createElement('span');
+              reason.className = 'relationship-lens-why';
+              reason.textContent = explainText(why);
+              button.appendChild(reason);
+            }
             section.appendChild(button);
           });
           relationshipList.appendChild(section);
@@ -8740,6 +8851,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         label.textContent = '';
         detail.textContent = '';
         detail.hidden = true;
+        clearExplain();
         kind.textContent = '';
         kind.hidden = true;
         context.textContent = '';

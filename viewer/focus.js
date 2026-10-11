@@ -10,6 +10,20 @@
       var chip = document.getElementById('focus-chip');
       var label = document.getElementById('focus-label');
       var detail = document.getElementById('focus-detail');
+      var explainBox = document.getElementById('focus-explain');
+      var explainSummary = document.getElementById('focus-explain-summary');
+      var explainHeading = document.getElementById('focus-explain-heading');
+      var explainSteps = document.getElementById('focus-explain-steps');
+      // Optional authored details/explanations, emitted outside the SVG so
+      // canonical exports stay unchanged. Missing or malformed data is ignored.
+      var explainData = (function () {
+        var element = document.getElementById('archify-explain-data');
+        if (!element) return null;
+        try {
+          var parsed = JSON.parse(element.textContent || 'null');
+          return parsed && typeof parsed === 'object' ? parsed : null;
+        } catch (_) { return null; }
+      })();
       var kind = document.getElementById('focus-kind');
       var context = document.getElementById('focus-context');
       var tag = document.getElementById('focus-tag');
@@ -374,8 +388,49 @@
         });
         evidence.hidden = false;
       }
+      function explainText(value) {
+        var text = value == null ? '' : String(value);
+        return Archify.alternateLanguage ? Archify.alternateLanguage.text(text) : text;
+      }
+      function nodeExplanation(id) {
+        var entry = explainData && explainData.nodes && explainData.nodes[id];
+        return entry && typeof entry === 'object' ? entry : null;
+      }
+      function edgeExplanation(key) {
+        var value = explainData && explainData.edges && explainData.edges[key];
+        return typeof value === 'string' && value.trim() ? value : '';
+      }
+      function clearExplain() {
+        explainSummary.textContent = '';
+        explainSummary.hidden = true;
+        explainHeading.hidden = true;
+        explainSteps.textContent = '';
+        explainSteps.hidden = true;
+        explainBox.hidden = true;
+      }
+      function renderExplain(id) {
+        clearExplain();
+        var entry = nodeExplanation(id);
+        if (!entry) return;
+        if (typeof entry.summary === 'string' && entry.summary.trim()) {
+          explainSummary.textContent = explainText(entry.summary);
+          explainSummary.hidden = false;
+        }
+        var steps = Array.isArray(entry.steps)
+          ? entry.steps.filter(function (step) { return typeof step === 'string' && step.trim(); })
+          : [];
+        steps.forEach(function (step) {
+          var item = document.createElement('li');
+          item.textContent = explainText(step);
+          explainSteps.appendChild(item);
+        });
+        explainHeading.hidden = !steps.length;
+        explainSteps.hidden = !steps.length;
+        explainBox.hidden = explainSummary.hidden && !steps.length;
+      }
       function renderPassport(id, node) {
         setPassportValue(detail, node.getAttribute('data-node-sublabel'));
+        renderExplain(id);
         setPassportValue(kind, viewerKindLabel(node.getAttribute('data-node-kind') || 'node'));
         setPassportValue(context, node.getAttribute('data-node-context'));
         setPassportValue(tag, node.getAttribute('data-node-tag'));
@@ -1008,6 +1063,13 @@
             button.appendChild(direction);
             button.appendChild(target);
             button.appendChild(relation);
+            var why = edgeExplanation(relationship.key);
+            if (why) {
+              var reason = document.createElement('span');
+              reason.className = 'relationship-lens-why';
+              reason.textContent = explainText(why);
+              button.appendChild(reason);
+            }
             section.appendChild(button);
           });
           relationshipList.appendChild(section);
@@ -1273,6 +1335,7 @@
         label.textContent = '';
         detail.textContent = '';
         detail.hidden = true;
+        clearExplain();
         kind.textContent = '';
         kind.hidden = true;
         context.textContent = '';
