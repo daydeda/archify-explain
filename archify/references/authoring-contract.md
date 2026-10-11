@@ -395,6 +395,16 @@ GitLab/Gitea/Forgejo/Bitbucket web links are not implemented in this version;
 use local-only until a tested link provider is available. Unknown web providers
 fail with a diagnostic rather than emitting a guessed link.
 
+## Node details and relationship explanations
+
+Architecture components accept an optional `details` object, and connections accept an optional `explanation` string. Neither changes layout or validation geometry; the Viewer shows them in the Semantic passport when the reader clicks a node.
+
+- `details.summary` (up to 600 characters): what the component does, in one or two sentences.
+- `details.steps` (1–12 items, up to 400 characters each): how it works, in reading order. Name real methods, files, or stages when the diagram is repository-backed, and keep each claim supported by the component's `sources`.
+- `explanation` on a connection (up to 600 characters): why the relationship exists or what the call does. It appears beside that relationship in both endpoints' passports.
+
+Add them when the user wants a diagram they can learn from or present (“explain each file”, “what does each part do”). Keep sublabels short and put the longer text here instead of growing the box.
+
 ## Hand-placed fallback
 
 Use only when no renderer can run. Start from `assets/template.html`, keep semantic CSS classes, preserve the inline SVG/accessibility structure, and run the delivery visual checklist. Never introduce inline literal colors that break dark/light parity.

@@ -18,6 +18,27 @@
       "additionalProperties": { "type": "string", "minLength": 1, "maxLength": 400 },
       "maxProperties": 600
     },
+    "nodeDetails": {
+      "description": "Optional longer explanation shown when the reader clicks the node: what it does and how it works. It never changes layout.",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "summary": { "type": "string", "minLength": 1, "maxLength": 600 },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "items": { "type": "string", "minLength": 1, "maxLength": 400 }
+        }
+      }
+    },
+    "relationshipExplanation": {
+      "description": "Optional sentence or two explaining why this relationship exists, shown in the clicked node's relationship list. It never changes layout.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 600
+    },
     "animation": {
       "enum": ["trace", "none"]
     },
