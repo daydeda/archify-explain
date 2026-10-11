@@ -54,6 +54,19 @@ function updatesDisabled() {
   return process.env.ARCHIFY_UPDATE_CHECK_DISABLED === '1';
 }
 
+// A renamed fork, such as archify-explain, ships the upstream release identity
+// unchanged, but upstream releases are not updates for it: installing one
+// would replace the fork. Stay silent when the package beside the release
+// file carries a different name.
+async function isRenamedFork(releasePath) {
+  try {
+    const manifest = JSON.parse(await fs.readFile(path.join(path.dirname(releasePath), 'package.json'), 'utf8'));
+    return typeof manifest.name === 'string' && manifest.name !== SKILL_ID;
+  } catch {
+    return false;
+  }
+}
+
 function isPlainObject(value) {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }
@@ -1475,6 +1488,7 @@ export async function checkForUpdate({
   timeoutMs = DEFAULT_TIMEOUT_MS,
 } = {}) {
   if (updatesDisabled()) return silent('disabled');
+  if (await isRenamedFork(releasePath)) return silent('renamed-fork');
   if (typeof fetchImpl !== 'function') return silent('runtime-unavailable');
   let localRelease;
   try {

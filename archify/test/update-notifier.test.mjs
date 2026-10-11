@@ -2979,7 +2979,10 @@ test('legacy CLI acknowledgement is a harmless one-line no-op', async (t) => {
     : process.platform === 'darwin'
       ? path.join(home, 'Library', 'Caches', 'archify-skill')
       : path.join(xdg, 'archify-skill');
-  const releasePath = path.join(skillRoot, 'skill-release.json');
+  // Copy the shipped release identity away from the renamed fork's package.json,
+  // which would otherwise silence the offer this test needs.
+  const releasePath = path.join(root, 'skill-release.json');
+  fs.copyFileSync(path.join(skillRoot, 'skill-release.json'), releasePath);
   const installedRelease = JSON.parse(fs.readFileSync(releasePath, 'utf8'));
   const [major, minor, patch] = parseSemver(installedRelease.version).core;
   const candidateVersion = `${major}.${minor}.${BigInt(patch) + 1n}`;

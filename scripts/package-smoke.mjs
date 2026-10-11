@@ -180,18 +180,25 @@ try {
     now: () => Date.parse('2026-08-28T00:00:00Z'),
     random: () => 0.5,
   });
-  if (notifierReceipt.status !== 'update_available') {
-    throw new Error(`packaged update checker did not return an update candidate: ${JSON.stringify(notifierReceipt)}`);
-  }
-  const notifierSnooze = await checker.setUpdatePreference({
-    releasePath: path.join(skillRoot, 'skill-release.json'),
-    cacheDirectory: notifierCache,
-    eventKey: notifierReceipt.eventKey,
-    mode: 'snooze',
-    now: () => Date.parse('2026-08-28T00:00:01Z'),
-  });
-  if (notifierSnooze.status !== 'snoozed') {
-    throw new Error('packaged update checker did not persist an explicit snooze');
+  if (packageJson.name !== 'archify') {
+    // A renamed fork must never be offered an upstream release.
+    if (notifierReceipt.status !== 'silent' || notifierReceipt.reason !== 'renamed-fork') {
+      throw new Error(`packaged fork offered an upstream update: ${JSON.stringify(notifierReceipt)}`);
+    }
+  } else {
+    if (notifierReceipt.status !== 'update_available') {
+      throw new Error(`packaged update checker did not return an update candidate: ${JSON.stringify(notifierReceipt)}`);
+    }
+    const notifierSnooze = await checker.setUpdatePreference({
+      releasePath: path.join(skillRoot, 'skill-release.json'),
+      cacheDirectory: notifierCache,
+      eventKey: notifierReceipt.eventKey,
+      mode: 'snooze',
+      now: () => Date.parse('2026-08-28T00:00:01Z'),
+    });
+    if (notifierSnooze.status !== 'snoozed') {
+      throw new Error('packaged update checker did not persist an explicit snooze');
+    }
   }
 
   const skill = fs.readFileSync(path.join(skillRoot, 'SKILL.md'), 'utf8');

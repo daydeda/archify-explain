@@ -45,6 +45,13 @@
 
 <p align="center"><a href="#sponsors"><strong>❤️ Partners & sponsors: Kimi Work · Supercode · OpenLux</strong></a></p>
 
+> **archify-explain** is a fork of [tt-a1i/archify](https://github.com/tt-a1i/archify) (MIT). It installs as its own skill, `archify-explain`, next to the original, and adds:
+>
+> - **Click-to-explain:** each box and arrow can carry a longer explanation (what it does, how it works, why it connects) that appears in the Semantic passport when you click it.
+> - **Two-language switch:** one diagram can hold a second language (for example English and Thai) and switch between them in the page.
+>
+> Upstream Archify releases are not offered as updates to this fork, so installing one never replaces it. Everything else below is the original Archify documentation.
+
 ## See Archify in action
 
 <!-- archify-launch-video -->
