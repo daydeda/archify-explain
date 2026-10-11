@@ -9362,7 +9362,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         var target = event.target;
         if (chip.hidden || !target || typeof target.closest !== 'function' || chip.contains(target)) return;
         if (container.getAttribute('data-just-panned') === 'true') return;
-        if (target.closest('[data-node-id], [data-relationship-hit-key], .overview-map')) return;
+        // Switching language keeps the passport open so the same explanation
+        // can be read in the other language.
+        if (target.closest('[data-node-id], [data-relationship-hit-key], .overview-map, #btn-language')) return;
         clear();
       }, true);
       window.addEventListener('scroll', requestLensPlacement, { passive: true });
