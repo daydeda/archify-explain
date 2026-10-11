@@ -16,7 +16,7 @@ const frontmatter = skill.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
 test('skill description is portable across 1024-character runtimes and remains searchable', () => {
   assert.ok(frontmatter, 'SKILL.md must start with YAML frontmatter');
   const metadata = parse(frontmatter[1]);
-  assert.equal(metadata.name, 'archify');
+  assert.equal(metadata.name, 'archify-explain');
   const description = metadata.description;
   assert.equal(typeof description, 'string', 'frontmatter description must be a YAML string');
   assert.ok(description.trim(), 'frontmatter must include a nonempty description');

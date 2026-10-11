@@ -1,9 +1,9 @@
 {
-  "name": "archify",
+  "name": "archify-explain",
   "version": "3.0.1",
   "private": true,
   "type": "module",
-  "description": "JSON-IR diagram renderers (architecture / workflow / sequence / dataflow / lifecycle).",
+  "description": "JSON-IR diagram renderers (architecture / workflow / sequence / dataflow / lifecycle) with click-to-explain details and a two-language switch. Fork of tt-a1i/archify.",
   "license": "MIT",
   "bin": {
     "archify": "./bin/archify.mjs"
