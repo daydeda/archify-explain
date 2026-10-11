@@ -86,6 +86,7 @@
           "icon": { "$ref": "common.schema.json#/$defs/nodeIcon" },
           "brand": { "$ref": "common.schema.json#/$defs/brandMark" },
           "sources": { "$ref": "common.schema.json#/$defs/sourceReferences" },
+          "details": { "$ref": "common.schema.json#/$defs/nodeDetails" },
           "row": { "type": "integer", "minimum": 0 },
           "col": { "type": "integer", "minimum": 0 },
           "pos": { "$ref": "common.schema.json#/$defs/point" },
@@ -143,7 +144,8 @@
           "labelDx": { "type": "number" },
           "labelDy": { "type": "number" },
           "labelSegment": { "type": "integer", "minimum": 0 },
-          "width": { "$ref": "common.schema.json#/$defs/relationshipWidth" }
+          "width": { "$ref": "common.schema.json#/$defs/relationshipWidth" },
+          "explanation": { "$ref": "common.schema.json#/$defs/relationshipExplanation" }
         }
       }
     },
