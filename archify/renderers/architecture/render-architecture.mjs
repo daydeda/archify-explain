@@ -974,21 +974,46 @@ ${renderLegend()}
 
 // Optional reader-facing explanations. Edges are keyed by their
 // data-edge-key (the connection's index), which every rendered edge carries.
+// `components` and `links` feed the side panel and file guide: every node is
+// listed so the panel can show connections even without authored details.
 function explainPayload() {
   const nodes = {};
+  const layerOf = new Map();
+  for (const boundary of asArray(arch.boundaries)) {
+    for (const id of asArray(boundary.wraps)) if (!layerOf.has(id) && boundary.label) layerOf.set(id, boundary.label);
+  }
+  const panel = {};
   for (const component of asArray(arch.components)) {
-    if (!component.details) continue;
+    const details = component.details || {};
     const entry = {};
-    if (component.details.summary) entry.summary = component.details.summary;
-    if (Array.isArray(component.details.steps) && component.details.steps.length) entry.steps = [...component.details.steps];
+    if (details.summary) entry.summary = details.summary;
+    if (Array.isArray(details.steps) && details.steps.length) entry.steps = [...details.steps];
     if (Object.keys(entry).length) nodes[component.id] = entry;
+    const firstSource = asArray(component.sources).find((source) => source && source.path);
+    panel[component.id] = {
+      label: component.label || component.id,
+      ...(component.sublabel ? { sublabel: component.sublabel } : {}),
+      ...entry,
+      ...(details.file || firstSource ? { file: details.file || firstSource.path } : {}),
+      ...(details.owner ? { owner: details.owner } : {}),
+      ...(layerOf.has(component.id) ? { layer: layerOf.get(component.id) } : {}),
+    };
   }
   const edges = {};
+  const links = [];
   asArray(arch.connections).forEach((conn, index) => {
-    if (typeof conn.explanation === 'string' && conn.explanation.trim()) edges[String(index)] = conn.explanation;
+    const explanation = typeof conn.explanation === 'string' && conn.explanation.trim() ? conn.explanation : '';
+    if (explanation) edges[String(index)] = explanation;
+    links.push({
+      key: String(index),
+      from: conn.from,
+      to: conn.to,
+      ...(conn.label ? { label: conn.label } : {}),
+      ...(explanation ? { explanation } : {}),
+    });
   });
   if (!Object.keys(nodes).length && !Object.keys(edges).length) return null;
-  return { nodes, edges };
+  return { nodes, edges, components: panel, links };
 }
 
 if (layoutJsonMode) {

@@ -40,6 +40,9 @@
         "alternate_language": {
           "$ref": "common.schema.json#/$defs/alternateLanguage"
         },
+        "guide": {
+          "$ref": "common.schema.json#/$defs/guide"
+        },
         "subtitle": {
           "type": "string"
         },

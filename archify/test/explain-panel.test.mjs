@@ -48,10 +48,13 @@ function explainData(html) {
 
 test('authored details and explanations are embedded for the passport, keyed by node id and edge key', (t) => {
   const html = render(t, { withExplain: true });
-  assert.deepEqual(explainData(html), {
-    nodes: { api: { summary: 'Serves </script> safely.', steps: ['Checks the token.', 'Queries the DB.'] } },
-    edges: { 1: 'The API is the only writer.' },
-  });
+  const data = explainData(html);
+  assert.deepEqual(data.nodes, { api: { summary: 'Serves </script> safely.', steps: ['Checks the token.', 'Queries the DB.'] } });
+  assert.deepEqual(data.edges, { 1: 'The API is the only writer.' });
+  // The side panel gets every component and connection, even those without details.
+  assert.deepEqual(Object.keys(data.components).sort(), ['api', 'db', 'web']);
+  assert.equal(data.components.api.summary, 'Serves </script> safely.');
+  assert.deepEqual(data.links[1], { key: '1', from: 'api', to: 'db', label: 'SQL', explanation: 'The API is the only writer.' });
   // The second connection carries data-edge-key="1", which the passport uses.
   assert.match(html, /data-edge-from="api" data-edge-to="db" data-edge-label="SQL" data-edge-key="1"/);
   // Script-breaking text stays escaped inside the JSON block.

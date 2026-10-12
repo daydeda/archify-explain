@@ -32,9 +32,10 @@ Use this path for ordinary generation. Read branch references only when their st
 
    Archify-explain defaults (apply on every draft unless the user opts out; see [Node details and relationship explanations](references/authoring-contract.md#node-details-and-relationship-explanations) and [Second language switch](references/authoring-contract.md#second-language-switch)):
    - **Layer boundaries:** for a codebase or system architecture, wrap components in `region` boundaries named by layer and owner when known (for example `Frontend / View`, `Backend / Logic`, `Data / Storage`, `External`). Every non-external component belongs to one layer boundary.
-   - **Details on every component:** give each component `details.summary` (its responsibility, naming its file or module) and `details.steps` (how it works, in reading order).
+   - **Details on every component:** give each component `details.summary` (its responsibility), `details.steps` (how it works, in reading order), `details.file` (its source file or folder) and `details.owner` when an owner is known. Clicking a box opens the side panel with these plus its incoming and outgoing connections.
    - **Explanation on every connection:** give each connection an `explanation` of why the call or data flow exists.
-   - **Second language:** add `meta.alternate_language` with `locale: "th"`, `label: "ไทย"` and `strings` covering the title, every label, sublabel, connection label, boundary label, card text, `details` and `explanation`, unless the user names another language or asks for one language only.
+   - **File guide:** add `meta.guide` with at least an overview section (the big idea, why the parts are split this way) and a section for the main flows step by step; add `why` and `qa` where they help a newcomer. One card per component is appended automatically from `details`. The 📘 Guide button jumps to it.
+   - **Second language:** add `meta.alternate_language` with `locale: "th"`, `label: "ไทย"` and `strings` covering the title, every label, sublabel, connection label, boundary label, card text, `details`, `explanation` and every `meta.guide` text, unless the user names another language or asks for one language only.
 4. Once the complete first candidate is written, run `finalize` directly. Its first gate is showcase validation; successful first drafts need no separate pre-validation. Keep the candidate unchanged while the command runs:
 
    ```bash

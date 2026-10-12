@@ -411,6 +411,13 @@ Architecture components accept an optional `details` object, and connections acc
 - `details.summary` (up to 600 characters): what the component does, in one or two sentences.
 - `details.steps` (1–12 items, up to 400 characters each): how it works, in reading order. Name real methods, files, or stages when the diagram is repository-backed, and keep each claim supported by the component's `sources`.
 - `explanation` on a connection (up to 600 characters): why the relationship exists or what the call does. It appears beside that relationship in both endpoints' passports.
+- `details.file` (up to 300 characters) and `details.owner` (up to 80): the component's source file or folder and the person or team responsible. Without `details.file`, the first `sources` path is shown.
+
+Clicking a box opens a side panel with the box's file, owner, layer (its first wrapping boundary), summary, steps, and every incoming and outgoing connection with its `explanation`; connection names jump to the other box. A floating dock in the bottom-right corner switches between the base and alternate language and opens the file guide.
+
+### File guide
+
+`meta.guide` (all five modes) renders a reader guide below the diagram: optional `title` and `intro`, then `sections`, each with a `title`, optional `intro` and `cards`. A card has a `title` and any of `file`, `owner`, `text`, `steps` (numbered), `items` (bulleted), `why` (highlighted rationale) and `qa` (`[{ "q", "a" }]`). Unless `include_components` is `false`, one card per component with `details` is appended. Wrap code names in backticks; dotted calls and paths are shown as code automatically. Put every guide text into `alternate_language.strings` too.
 
 Add them when the user wants a diagram they can learn from or present (“explain each file”, “what does each part do”). Keep sublabels short and put the longer text here instead of growing the box.
 

@@ -294,6 +294,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     <!-- ARCHIFY:SOURCE_EVIDENCE_DATA -->
     <!-- ARCHIFY:EXPLAIN_DATA -->
     <!-- ARCHIFY:ALTERNATE_LANGUAGE_DATA -->
+    <!-- ARCHIFY:GUIDE_DATA -->
     <!-- ARCHIFY:I18N_DATA -->
     <!-- Main Diagram -->
     <div class="diagram-container" data-detail-level="read"
@@ -677,6 +678,14 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
   </div>
 
+  <section class="archify-guide" id="archify-guide" hidden></section>
+  <aside class="explain-panel no-print" id="explain-panel" role="dialog" aria-live="polite" hidden>
+    <button class="explain-panel-close" id="explain-panel-close" type="button" aria-label="Close">×</button>
+    <div id="explain-panel-body"></div>
+  </aside>
+  <div class="explain-dock no-print" id="explain-dock" hidden></div>
+  <div class="explain-tip no-print" id="explain-tip" hidden></div>
+
   <script>
     var Archify = {};
     var archifyI18nData = (function () {
@@ -1027,6 +1036,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       }
       return {
         available: function () { return Boolean(data); },
+        labels: function () { return data ? { base: data.base.label, alternate: data.alternate.label } : null; },
         active: function () { return active; },
         set: set,
         text: text
@@ -1297,6 +1307,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 /* ARCHIFY:ROUTE_PROBE */
 
 /* ARCHIFY:SEMANTIC_LENS */
+/* ARCHIFY:EXPLAIN_PANEL */
 
     /* ============================================================
        Diagram Guide — a factual command deck over existing interactions.

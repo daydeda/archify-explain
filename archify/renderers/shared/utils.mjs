@@ -128,6 +128,7 @@ const SOURCE_EVIDENCE_PLACEHOLDER = '    <!-- ARCHIFY:SOURCE_EVIDENCE_DATA -->';
 const I18N_PLACEHOLDER = '    <!-- ARCHIFY:I18N_DATA -->';
 const EXPLAIN_PLACEHOLDER = '    <!-- ARCHIFY:EXPLAIN_DATA -->';
 const ALTERNATE_LANGUAGE_PLACEHOLDER = '    <!-- ARCHIFY:ALTERNATE_LANGUAGE_DATA -->';
+const GUIDE_PLACEHOLDER = '    <!-- ARCHIFY:GUIDE_DATA -->';
 
 function serializeScriptJson(value) {
   return JSON.stringify(value)
@@ -164,6 +165,7 @@ export function applyTemplate(template, {
   sourceEvidence = null,
   explain = null,
   alternateLanguage = null,
+  guide = null,
 }) {
   if (!SVG_SLOT_RE.test(template)) {
     throw new Error('applyTemplate: template missing ARCHIFY:SVG_SLOT sentinel');
@@ -193,6 +195,9 @@ export function applyTemplate(template, {
   if (alternateLanguage && !template.includes(ALTERNATE_LANGUAGE_PLACEHOLDER)) {
     throw new Error(`applyTemplate: meta.alternate_language requires placeholder ${JSON.stringify(ALTERNATE_LANGUAGE_PLACEHOLDER)}`);
   }
+  if (guide && !template.includes(GUIDE_PLACEHOLDER)) {
+    throw new Error(`applyTemplate: meta.guide requires placeholder ${JSON.stringify(GUIDE_PLACEHOLDER)}`);
+  }
   // Function replacers: a literal `$&`, `$'`, `$\`` or `$$` in titles, labels,
   // or rendered SVG must not be interpreted as a replacement pattern.
   const sourceEvidenceJson = serializeScriptJson(sourceEvidence);
@@ -214,6 +219,9 @@ export function applyTemplate(template, {
     .replace(CARDS_SLOT_RE, () => cards)
     .replace(ALTERNATE_LANGUAGE_PLACEHOLDER, () => alternateLanguage
       ? `    <script id="archify-alternate-language-data" type="application/json">${serializeScriptJson(alternateLanguagePayload(resolvedLocale, alternateLanguage))}</script>`
+      : '')
+    .replace(GUIDE_PLACEHOLDER, () => guide
+      ? `    <script id="archify-guide-data" type="application/json">${serializeScriptJson(guide)}</script>`
       : '')
     .replace(EXPLAIN_PLACEHOLDER, () => explain
       ? `    <script id="archify-explain-data" type="application/json">${serializeScriptJson(explain)}</script>`
