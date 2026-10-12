@@ -21,7 +21,8 @@ const intentMarker = '/* ARCHIFY:INTENT_TRACE */';
 const lensMarker = '/* ARCHIFY:SEMANTIC_LENS */';
 const routeMarker = '/* ARCHIFY:ROUTE_PROBE */';
 const focusMarker = '/* ARCHIFY:FOCUS */';
-const fragments = { viewerCss: viewerCssMarker, export: exportMarker, reader: marker, cleanup: cleanupMarker, chrome: chromeMarker, camera: cameraMarker, radar: radarMarker, motion: motionMarker, finder: finderMarker, outline: outlineMarker, intent: intentMarker, lens: lensMarker, route: routeMarker, focus: focusMarker };
+const explainPanelMarker = '/* ARCHIFY:EXPLAIN_PANEL */';
+const fragments = { viewerCss: viewerCssMarker, export: exportMarker, reader: marker, cleanup: cleanupMarker, chrome: chromeMarker, camera: cameraMarker, radar: radarMarker, motion: motionMarker, finder: finderMarker, outline: outlineMarker, intent: intentMarker, lens: lensMarker, route: routeMarker, focus: focusMarker, explainPanel: explainPanelMarker };
 
 function fixture(t) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-viewer-build-'));
@@ -49,6 +50,7 @@ function fixture(t) {
     lens: path.join(root, 'viewer/semantic-lens.js'),
     route: path.join(root, 'viewer/route-probe.js'),
     focus: path.join(root, 'viewer/focus.js'),
+    explainPanel: path.join(root, 'viewer/explain-panel.js'),
     run: (...args) => spawnSync(process.execPath, [path.join(root, 'scripts/generate-viewer.mjs'), ...args], {
       cwd: os.tmpdir(), encoding: 'utf8',
     }),
@@ -134,7 +136,7 @@ test('assembly preserves literal replacement tokens, Unicode and source line end
   const f = fixture(t);
   const reader = '// $& $\' $` $$ 中文 \u{1f5fa}\r\n(function () {})();\r\n';
   const css = '/* === TOKENS === */\r\n:root { --x: 1; }\r\n';
-  fs.writeFileSync(f.shell, `<style>${viewerCssMarker}</style><script>\r\n${focusMarker}${routeMarker}${lensMarker}${intentMarker}${finderMarker}${outlineMarker}${motionMarker}${radarMarker}${cameraMarker}${chromeMarker}${exportMarker}${marker}</script>\n`);
+  fs.writeFileSync(f.shell, `<style>${viewerCssMarker}</style><script>\r\n${focusMarker}${explainPanelMarker}${routeMarker}${lensMarker}${intentMarker}${finderMarker}${outlineMarker}${motionMarker}${radarMarker}${cameraMarker}${chromeMarker}${exportMarker}${marker}</script>\n`);
   fs.writeFileSync(f.viewerCss, css);
   fs.writeFileSync(f.export, reader + cleanupMarker);
   fs.writeFileSync(f.cleanup, reader);
@@ -148,6 +150,7 @@ test('assembly preserves literal replacement tokens, Unicode and source line end
   fs.writeFileSync(f.lens, reader);
   fs.writeFileSync(f.route, reader);
   fs.writeFileSync(f.focus, reader);
+  fs.writeFileSync(f.explainPanel, reader);
   fs.writeFileSync(f.reader, reader);
   assert.equal(f.run().status, 0);
   // The viewer.css file is inlined inside the <style> block. The marker sits
@@ -159,7 +162,7 @@ test('assembly preserves literal replacement tokens, Unicode and source line end
   const indentedCss = css.split('\n').map((line) => line.length === 0 ? line : '    ' + line).join('\n');
   assert.equal(
     fs.readFileSync(f.output, 'utf8'),
-    `<style>${indentedCss}</style><script>\r\n${reader}${reader}${reader}${reader}${reader}${reader}${reader}${reader}${reader}${reader}${reader}${reader}${reader}</script>\n`,
+    `<style>${indentedCss}</style><script>\r\n${reader.repeat(14)}</script>\n`,
   );
   assert.equal(f.run('--check').status, 0);
 });

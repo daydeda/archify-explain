@@ -42,12 +42,72 @@
       "additionalProperties": false,
       "minProperties": 1,
       "properties": {
+        "file": { "type": "string", "minLength": 1, "maxLength": 300, "description": "Source file or folder this component lives in, shown under its name in the side panel and file guide." },
+        "owner": { "type": "string", "minLength": 1, "maxLength": 80, "description": "Person or team responsible, shown as a badge." },
         "summary": { "type": "string", "minLength": 1, "maxLength": 600 },
         "steps": {
           "type": "array",
           "minItems": 1,
           "maxItems": 12,
           "items": { "type": "string", "minLength": 1, "maxLength": 400 }
+        }
+      }
+    },
+    "guide": {
+      "description": "Optional reader guide rendered below the diagram and opened by the Guide button: an overview of what the parts do, how they connect and why. Every text is translatable through alternate_language.strings.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sections"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "intro": { "type": "string", "minLength": 1, "maxLength": 1200 },
+        "include_components": { "type": "boolean", "description": "Append one card per component built from its details. Defaults to true." },
+        "sections": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["title", "cards"],
+            "properties": {
+              "title": { "type": "string", "minLength": 1, "maxLength": 160 },
+              "intro": { "type": "string", "minLength": 1, "maxLength": 1200 },
+              "cards": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 40,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["title"],
+                  "properties": {
+                    "title": { "type": "string", "minLength": 1, "maxLength": 160 },
+                    "file": { "type": "string", "minLength": 1, "maxLength": 300 },
+                    "owner": { "type": "string", "minLength": 1, "maxLength": 80 },
+                    "text": { "type": "string", "minLength": 1, "maxLength": 1600 },
+                    "steps": { "type": "array", "minItems": 1, "maxItems": 20, "items": { "type": "string", "minLength": 1, "maxLength": 600 } },
+                    "items": { "type": "array", "minItems": 1, "maxItems": 20, "items": { "type": "string", "minLength": 1, "maxLength": 600 } },
+                    "why": { "type": "string", "minLength": 1, "maxLength": 1200 },
+                    "qa": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 10,
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": ["q", "a"],
+                        "properties": {
+                          "q": { "type": "string", "minLength": 1, "maxLength": 400 },
+                          "a": { "type": "string", "minLength": 1, "maxLength": 1200 }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
