@@ -271,6 +271,7 @@ export function writeDiagram({ outPath, template, diagramType, meta, svg, cards,
     visualPreset: meta.visual_preset || 'classic',
     sourceEvidence,
     explain,
+    alternateLanguage: meta.alternate_language || null,
   });
   let candidatePath;
   let candidateIdentity;
