@@ -108,6 +108,15 @@ Renderer-owned default legend labels follow `meta.locale`; author a
 `meta.legend.entries.*.label` override only when the diagram needs different
 domain wording, and keep that authored override in the primary language.
 
+### Second language switch
+
+When the user wants one diagram readable in two languages (for example English and Thai), keep every authored field in the primary language and add `meta.alternate_language` (all five modes):
+
+- `locale` (language tag, e.g. `th`) and `label` (the switch text, e.g. `ไทย`, up to 24 characters); optional `base_label` for the primary language (defaults to its short code, e.g. `EN`).
+- `strings`: a map from each authored text, exactly as written, to its translation. Cover the title, labels, sublabels, connection labels, boundary and card text, and any `details` / `explanation` text. Text without an entry stays as authored.
+
+The Viewer shows a language button in the toolbar and swaps matching text in place; its own controls stay in `meta.locale`. Image exports use whichever language is showing; the delivered HTML file keeps the primary language in its SVG. Keep exact product, code, and API names untranslated, and check that translated labels still fit their boxes.
+
 ## Visual preset default
 
 Omit `meta.visual_preset` by default. The renderer then opens the diagram in
@@ -394,6 +403,16 @@ aliases and forge-specific browse/clone prefixes are not guessed.
 GitLab/Gitea/Forgejo/Bitbucket web links are not implemented in this version;
 use local-only until a tested link provider is available. Unknown web providers
 fail with a diagnostic rather than emitting a guessed link.
+
+## Node details and relationship explanations
+
+Architecture components accept an optional `details` object, and connections accept an optional `explanation` string. Neither changes layout or validation geometry; the Viewer shows them in the Semantic passport when the reader clicks a node.
+
+- `details.summary` (up to 600 characters): what the component does, in one or two sentences.
+- `details.steps` (1–12 items, up to 400 characters each): how it works, in reading order. Name real methods, files, or stages when the diagram is repository-backed, and keep each claim supported by the component's `sources`.
+- `explanation` on a connection (up to 600 characters): why the relationship exists or what the call does. It appears beside that relationship in both endpoints' passports.
+
+Add them when the user wants a diagram they can learn from or present (“explain each file”, “what does each part do”). Keep sublabels short and put the longer text here instead of growing the box.
 
 ## Hand-placed fallback
 

@@ -1637,6 +1637,41 @@ html[data-preset="blueprint"] .focus-chip { border-radius: 0.3rem; }
   white-space: nowrap;
 }
 .semantic-passport-detail[hidden] { display: none; }
+.semantic-passport-explain {
+  max-height: min(14rem, 34vh);
+  margin-top: 0.45rem;
+  padding: 0.45rem 0.55rem;
+  overflow-y: auto;
+  border-left: 2px solid var(--frontend-stroke);
+  border-radius: 0 0.45rem 0.45rem 0;
+  background: color-mix(in srgb, var(--panel) 72%, transparent);
+  color: var(--text);
+  font-size: 0.625rem;
+  line-height: 1.5;
+  overscroll-behavior: contain;
+}
+.semantic-passport-explain[hidden],
+.semantic-passport-explain [hidden] { display: none; }
+.semantic-passport-explain-summary {
+  margin: 0;
+  white-space: normal;
+}
+.semantic-passport-explain-heading {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--text-faint);
+  font-size: 0.5rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.semantic-passport-explain-summary[hidden] + .semantic-passport-explain-heading { margin-top: 0; }
+.semantic-passport-explain-steps {
+  margin: 0.2rem 0 0;
+  padding-left: 1.05rem;
+  white-space: normal;
+}
+.semantic-passport-explain-steps li + li { margin-top: 0.18rem; }
 .semantic-passport-meta {
   display: flex;
   flex-wrap: wrap;
@@ -1886,6 +1921,14 @@ a.semantic-passport-source:focus-visible {
   font-size: 0.6875rem;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.relationship-lens-why {
+  grid-column: 2;
+  margin-top: 0.15rem;
+  color: var(--text-muted);
+  font-size: 0.5625rem;
+  line-height: 1.45;
+  white-space: normal;
 }
 .relationship-lens-row small {
   overflow: hidden;
@@ -4697,4 +4740,13 @@ html[data-share-playback="true"] svg[data-animation="trace"] [data-graph-role="a
   .relationship-pulse-overlay { display: none !important; }
   .source-evidence-beacon,
   svg [data-node-id], svg [data-edge-from], svg [data-detail], svg [data-detail-anchor], svg [data-legend-hit], svg { transition: none !important; }
+}
+.language-glyph {
+  font-size: 0.75em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  opacity: 0.8;
+}
+#btn-language[hidden] {
+  display: none;
 }

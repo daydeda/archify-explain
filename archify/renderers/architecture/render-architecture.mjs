@@ -972,6 +972,25 @@ ${renderLegend()}
       </svg>`;
 }
 
+// Optional reader-facing explanations. Edges are keyed by their
+// data-edge-key (the connection's index), which every rendered edge carries.
+function explainPayload() {
+  const nodes = {};
+  for (const component of asArray(arch.components)) {
+    if (!component.details) continue;
+    const entry = {};
+    if (component.details.summary) entry.summary = component.details.summary;
+    if (Array.isArray(component.details.steps) && component.details.steps.length) entry.steps = [...component.details.steps];
+    if (Object.keys(entry).length) nodes[component.id] = entry;
+  }
+  const edges = {};
+  asArray(arch.connections).forEach((conn, index) => {
+    if (typeof conn.explanation === 'string' && conn.explanation.trim()) edges[String(index)] = conn.explanation;
+  });
+  if (!Object.keys(nodes).length && !Object.keys(edges).length) return null;
+  return { nodes, edges };
+}
+
 if (layoutJsonMode) {
   try {
     validateArchitecture();
@@ -997,5 +1016,6 @@ if (layoutJsonMode) {
     svg: renderSvg(),
     cards: arch.cards,
     sourceEvidence,
+    explain: explainPayload(),
   });
 }
