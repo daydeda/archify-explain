@@ -421,5 +421,8 @@
   "viewer.common.copyFailed": "Kopieren fehlgeschlagen",
   "viewer.common.copyLink": "Link kopieren",
   "viewer.common.clear": "Löschen",
-  "viewer.common.close": "Schließen"
+  "viewer.common.close": "Schließen",
+  "viewer.passport.explain.how": "So funktioniert es",
+  "viewer.language.switch": "Sprache wechseln",
+  "viewer.language.switchTo": "Zu {language} wechseln"
 }
