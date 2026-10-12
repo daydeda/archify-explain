@@ -14047,7 +14047,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         var target = event.target;
         if (chip.hidden || !target || typeof target.closest !== &#39;function&#39; || chip.contains(target)) return;
         if (container.getAttribute(&#39;data-just-panned&#39;) === &#39;true&#39;) return;
-        if (target.closest(&#39;[data-node-id], [data-relationship-hit-key], .overview-map&#39;)) return;
+        // Switching language keeps the passport open so the same explanation
+        // can be read in the other language.
+        if (target.closest(&#39;[data-node-id], [data-relationship-hit-key], .overview-map, #btn-language&#39;)) return;
         clear();
       }, true);
       window.addEventListener(&#39;scroll&#39;, requestLensPlacement, { passive: true });
@@ -28342,7 +28344,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         var target = event.target;
         if (chip.hidden || !target || typeof target.closest !== &#39;function&#39; || chip.contains(target)) return;
         if (container.getAttribute(&#39;data-just-panned&#39;) === &#39;true&#39;) return;
-        if (target.closest(&#39;[data-node-id], [data-relationship-hit-key], .overview-map&#39;)) return;
+        // Switching language keeps the passport open so the same explanation
+        // can be read in the other language.
+        if (target.closest(&#39;[data-node-id], [data-relationship-hit-key], .overview-map, #btn-language&#39;)) return;
         clear();
       }, true);
       window.addEventListener(&#39;scroll&#39;, requestLensPlacement, { passive: true });
